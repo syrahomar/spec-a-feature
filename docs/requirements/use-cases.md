@@ -1428,7 +1428,6 @@ Decided edge cases:
 
 Other:
 - The list is a student educational record; it is shown only to the actors named in the Business Rules field (CO-ferpa).
-- BR-reminder-limit holds even when two instructors send at the same moment: at most one on-demand reminder reaches a student per day.
 - Each reminder is independent: a failure to send one does not undo or block the others, and the state after step 9 is known exactly, because a reminder is recorded only when the email service accepted it.
 - The students of a course section are the students enrolled in it, judged by each student's own course section rather than her team's (AS-one-section-per-student).
 - A reminder record belongs to its student: deleting the student (BR-student-lifecycle) removes her reminder records with her, and must not be blocked by them.
