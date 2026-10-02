@@ -1307,6 +1307,109 @@ No two teams can have the same name. The team name must be unique. The course ad
 **Assumptions:** AS-one-section-per-student (an invitation is keyed by the invited address alone, which is unambiguous only because a student is invited to one course section)
 **Open Issues:**
 
+### **UC-STU-remind-non-submitters: The instructor reminds the students who have not submitted for the previous week**
+
+**UC ID and Name:** UC-STU-remind-non-submitters: Remind the students who have not submitted for the previous week
+**Created By:** Syrah Omar
+**Date Created:** 2026-10-01
+**Primary Actor:** instructor
+**Secondary Actors:** student (the recipient of a reminder), Gmail SMTP email service
+**Trigger:** The instructor indicates to view the students of a course section who have not submitted for the previous week.
+**Description:** The instructor wants to see which students of a course section still owe a weekly activity report or a peer evaluation for the previous week, and to remind only those students, so that she can follow up with them instead of emailing the whole course section.
+
+**Preconditions:**
+- PRE-1. The instructor is logged into the system.
+- PRE-2. The instructor is assigned to the course section (BR-section-scoped-access).
+
+**Postconditions:**
+- POST-1. The instructor is shown the students of the course section who have an outstanding submission for the previous week, and which artifact each one owes (BR-outstanding-submission).
+- POST-2. If the instructor chose to send reminders, each selected student who still had an outstanding submission at the time of sending, and who had not already been reminded that day, has been emailed a reminder for her own outstanding artifact(s) only.
+- POST-3. Each reminder that the email service accepted is recorded against its student, so that it counts toward BR-reminder-limit.
+
+**Main Success Scenario:**
+1. The instructor indicates to view the students of a course section who have not submitted for the previous week.
+2. The system determines the previous week and retrieves, for every student of the course section, her outstanding submissions for that week according to BR-outstanding-submission.
+3. The system displays the students who have an outstanding submission according to the "Outstanding-submission list" defined in the Associated Information of this use case, and how many such students there are.
+4. The instructor selects the students to remind (by default, every listed student who may still be reminded today) and confirms that she has finished selecting.
+5. The system asks the instructor to confirm sending a reminder to the selected students.
+6. The instructor confirms.
+7. The system determines each selected student's outstanding submissions again, at the time of sending.
+8. The system has the email service send each selected student who still has an outstanding submission an individual reminder according to the "Reminder email" defined in the Associated Information of this use case.
+9. The system records each reminder the email service accepted (BR-reminder-limit).
+10. The system informs the instructor how many reminders were sent, and lists each selected student who was not reminded with the reason.
+11. Use case ends.
+
+**Extensions:**
+- **1a. The instructor is not assigned to the course section:**
+  - 1a1. The system refuses access to the course section's submission status (BR-section-scoped-access, BR-role-based-access).
+  - 1a2. Use case ends.
+- **2a. The previous week is not one of the course section's active weeks:**
+  - 2a1. The system informs the instructor that no weekly activity report or peer evaluation was required for that week, so no student has an outstanding submission (BR-active-weeks, BR-outstanding-submission).
+  - 2a2. Use case ends.
+- **2b. A student of the course section is not assigned to a team:**
+  - 2b1. The system does not treat her as having an outstanding submission, because she cannot submit either record (BR-team-assignment-required, BR-outstanding-submission).
+  - 2b2. The system lists her separately as "not assigned to a team", with no option to remind her.
+  - 2b3. The flow continues at step 3.
+- **2c. A student of the course section has been deactivated:**
+  - 2c1. The system does not list her (BR-student-lifecycle, BR-outstanding-submission).
+  - 2c2. The flow continues at step 3.
+- **3a. No student has an outstanding submission:**
+  - 3a1. The system informs the instructor that every student assigned to a team has submitted for the previous week.
+  - 3a2. Use case ends.
+- **3b. The instructor only wanted to see who has not submitted:**
+  - 3b1. The instructor chooses to terminate the use case without sending reminders.
+  - 3b2. Use case ends.
+- **3c. A listed student has already been sent an on-demand reminder today:**
+  - 3c1. The system shows the time she was last reminded and does not let the instructor select her (BR-reminder-limit).
+  - 3c2. The flow continues at step 4.
+- **4a. The instructor selects no student:**
+  - 4a1. The system informs the instructor that at least one student must be selected.
+  - 4a2. The instructor either returns to step 4 of the normal flow or chooses to terminate the use case.
+- **7a. A selected student submitted the outstanding artifact after the list was displayed:**
+  - 7a1. The system does not remind her for that artifact; if she has no outstanding artifact left, the system does not remind her at all.
+  - 7a2. The flow continues at step 8.
+- **7b. A selected student was reminded by another instructor or course admin after the list was displayed:**
+  - 7b1. The system does not remind her again (BR-reminder-limit).
+  - 7b2. The flow continues at step 8.
+- **8a. The email service rejects a student's address:**
+  - 8a1. The system logs the failure, does not record a reminder for that student, and continues with the next student.
+  - 8a2. The student is reported at step 10 as not reached, and she may be selected again (BR-reminder-limit).
+  - 8a3. The flow continues at step 9.
+
+**Priority:** Medium
+**Frequency of Use:** 2-3 users (the instructors and course admin of a course section), 1-2 usages per week each.
+**Business Rules:** BR-section-scoped-access, BR-role-based-access (only an instructor assigned to the course section, or the course admin who owns it, sees its students' submission status and reminds them; a student never sees it); BR-outstanding-submission (what "has not submitted" means); BR-reminder-limit (how often a student may be reminded on demand); BR-team-assignment-required, BR-active-weeks, BR-evaluation-submission-window (which students and weeks can have an outstanding submission at all); BR-student-lifecycle (deactivated students)
+
+**Associated Information:**
+
+Outstanding-submission list:
+
+| Property name | Data type | Changeability | Rule | Glossary |
+| ---- | ---- | ---- | ---- | ---- |
+| Student name | text (first and last name) | read-only | — | Student |
+| Team | text | read-only | — | Team |
+| Weekly activity report outstanding | yes/no | read-only | BR-outstanding-submission | Weekly Activity Report (WAR) |
+| Peer evaluation outstanding | yes/no | read-only | BR-outstanding-submission | Peer Evaluation |
+| Last on-demand reminder today | time, or empty | read-only | BR-reminder-limit | — |
+
+- The list covers one course section and one week, the previous week, which is shown as its date range (e.g., "09-21-2026 to 09-27-2026").
+- Sorting criteria: by team, then by last name in ascending order.
+- Pagination: not needed.
+
+Reminder email:
+- Sent individually to one student's address; no other student's name or address appears in it (CO-ferpa).
+- Lists only the artifact(s) she owes for the previous week and, for each, its due day and due time as configured for her course section.
+- Delivered through the Gmail SMTP integration (CI-email-notifications).
+
+Other:
+- The list is a student educational record; it is shown only to the actors named in the Business Rules field (CO-ferpa).
+- Each reminder is independent: a failure to send one does not undo or block the others, and the state after step 9 is known exactly, because a reminder is recorded only when the email service accepted it.
+- The scheduled weekly reminder (FR-NOT-weekly-reminder) is a separate behavior and is not changed by this use case.
+
+**Related Use Cases:** UC-STU-view-pending-invitations, UC-WAR-team-war-report, UC-EVA-section-evaluation-report, UC-WAR-manage-activities, UC-EVA-submit-evaluation
+**Assumptions:** AS-one-section-per-student
+**Open Issues:**
+
 ### **UC-STU-find-students: The course admin/instructor finds students**
 
 **UC ID and Name:** UC-STU-find-students: Find students
