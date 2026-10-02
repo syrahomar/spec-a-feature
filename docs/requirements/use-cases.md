@@ -1343,8 +1343,8 @@ No two teams can have the same name. The team name must be unique. The course ad
 - **1a. The instructor is neither assigned to the course section nor the course admin who owns its course, or the user is a student:**
   - 1a1. The system refuses access to the course section's submission status (BR-section-scoped-access, BR-role-based-access).
   - 1a2. Use case ends.
-- **1b. The course section is not active:**
-  - 1b1. The system informs the instructor that the course section is not active, so its students are not reminded; this matches the scheduled reminder, which runs only for active course sections (FR-NOT-weekly-reminder).
+- **1b. The course section is not active** (checked only after 1a, so a user who may not access the course section is not told whether it is active):
+  - 1b1. The system informs the instructor that the course section is not active, so its students are not reminded, just as the scheduled reminder skips course sections that are not active (FR-NOT-weekly-reminder).
   - 1b2. Use case ends.
 - **2a. The previous week is not one of the course section's active weeks:**
   - 2a1. The system informs the instructor that no weekly activity report or peer evaluation was required for that week, so no student has an outstanding submission (BR-active-weeks, BR-outstanding-submission).
