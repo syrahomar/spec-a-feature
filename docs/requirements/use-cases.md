@@ -1346,7 +1346,7 @@ No two teams can have the same name. The team name must be unique. The course ad
 - **2a. The previous week is not one of the course section's active weeks:**
   - 2a1. The system informs the instructor that no weekly activity report or peer evaluation was required for that week, so no student has an outstanding submission (BR-active-weeks, BR-outstanding-submission).
   - 2a2. Use case ends.
-- **2b. A student of the course section is not assigned to a team:**
+- **2b. An active student of the course section is not assigned to a team:**
   - 2b1. The system does not treat her as having an outstanding submission, because she cannot submit either record (BR-team-assignment-required, BR-outstanding-submission).
   - 2b2. The system lists her separately as "not assigned to a team", with no option to remind her.
   - 2b3. The flow continues at step 3.
@@ -1365,15 +1365,16 @@ No two teams can have the same name. The team name must be unique. The course ad
 - **4a. The instructor selects no student:**
   - 4a1. The system informs the instructor that at least one student must be selected.
   - 4a2. The instructor either returns to step 4 of the normal flow or chooses to terminate the use case.
-- **7a. A selected student submitted the outstanding artifact after the list was displayed:**
-  - 7a1. The system does not remind her for that artifact; if she has no outstanding artifact left, the system does not remind her at all.
-  - 7a2. The flow continues at step 8.
-- **7c. The current week has changed since the list was displayed (the instructor confirmed after Sunday midnight):**
-  - 7c1. The system sends no reminder and informs the instructor that the list is out of date, because the previous week is now a different week and the displayed week's peer evaluations can no longer be submitted (BR-evaluation-submission-window).
-  - 7c2. The flow returns to step 2.
+- **7a. A selected student no longer has an outstanding submission for an artifact** (she submitted it, or she was deactivated, removed from her team, or moved out of the course section after the list was displayed):
+  - 7a1. The system does not remind her for that artifact; if she has no outstanding artifact left, the system does not remind her at all (BR-outstanding-submission).
+  - 7a2. The system reports her at step 10 with the reason (e.g., "submitted", "deactivated", "no longer on a team", "no longer in this course section").
+  - 7a3. The flow continues at step 8.
 - **7b. A selected student was reminded by another instructor or course admin after the list was displayed:**
   - 7b1. The system does not remind her again (BR-reminder-limit).
   - 7b2. The flow continues at step 8.
+- **7c. The current week has changed since the list was displayed (the instructor confirmed after Sunday midnight):**
+  - 7c1. The system sends no reminder and informs the instructor that the list is out of date, because the previous week is now a different week and the displayed week's peer evaluations can no longer be submitted (BR-evaluation-submission-window).
+  - 7c2. The flow returns to step 2.
 - **8a. The email service rejects a student's address:**
   - 8a1. The system logs the failure, does not record a reminder for that student, and continues with the next student.
   - 8a2. The student is reported at step 10 as not reached, and she may be selected again (BR-reminder-limit).
