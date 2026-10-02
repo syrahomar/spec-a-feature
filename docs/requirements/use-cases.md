@@ -1362,6 +1362,9 @@ No two teams can have the same name. The team name must be unique. The course ad
 - **3c. A listed student has already been sent an on-demand reminder today:**
   - 3c1. The system shows the time she was last reminded and does not let the instructor select her (BR-reminder-limit).
   - 3c2. The flow continues at step 4.
+- **3d. Every listed student has already been sent an on-demand reminder today:**
+  - 3d1. The system informs the instructor that every student with an outstanding submission has already been reminded today, and when each may be reminded again (BR-reminder-limit).
+  - 3d2. Use case ends.
 - **4a. The instructor selects no student:**
   - 4a1. The system informs the instructor that at least one student must be selected.
   - 4a2. The instructor either returns to step 4 of the normal flow or chooses to terminate the use case.
@@ -1379,6 +1382,9 @@ No two teams can have the same name. The team name must be unique. The course ad
   - 8a1. The system logs the failure, does not record a reminder for that student, and continues with the next student.
   - 8a2. The student is reported at step 10 as not reached, and she may be selected again (BR-reminder-limit).
   - 8a3. The flow continues at step 9.
+- **8b. The email service is unavailable** (for example, the connection or authentication fails):
+  - 8b1. The system handles each affected student as in 8a: it logs the failure, records no reminder for her, and reports her at step 10 as not reached.
+  - 8b2. The flow continues at step 9.
 
 **Priority:** Medium
 **Frequency of Use:** 2-3 users (the instructors and course admin of a course section), 1-2 usages per week each.
@@ -1407,6 +1413,7 @@ Reminder email:
 
 Other:
 - The list is a student educational record; it is shown only to the actors named in the Business Rules field (CO-ferpa).
+- BR-reminder-limit holds even when two instructors send at the same moment: at most one on-demand reminder reaches a student per day.
 - Each reminder is independent: a failure to send one does not undo or block the others, and the state after step 9 is known exactly, because a reminder is recorded only when the email service accepted it.
 - The scheduled weekly reminder (FR-NOT-weekly-reminder) is a separate behavior and is not changed by this use case.
 
