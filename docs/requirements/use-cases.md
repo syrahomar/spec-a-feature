@@ -1408,7 +1408,9 @@ Outstanding-submission list:
 
 Reminder email:
 - Sent individually to one student's address; no other student's name or address appears in it (CO-ferpa).
-- Lists only the artifact(s) she owes for the previous week and, for each, its due day and due time as configured for her course section.
+- Names the previous week by its date range and lists only the artifact(s) she owes for it.
+- For an outstanding peer evaluation, states that it can be submitted only until the end of the current week and cannot be made up afterward (BR-evaluation-submission-window). For an outstanding weekly activity report, states that it is still missing; no deadline is stated, because no rule makes a weekly activity report late.
+- Does not quote the course section's configured due days and due times: those drive the scheduled reminder (FR-NOT-weekly-reminder) for the current week and would give a wrong or already-past date for the previous week's work.
 - Delivered through the Gmail SMTP integration (CI-email-notifications).
 
 Other:
