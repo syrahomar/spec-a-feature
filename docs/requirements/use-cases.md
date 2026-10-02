@@ -1333,7 +1333,7 @@ No two teams can have the same name. The team name must be unique. The course ad
 4. The instructor selects the students to remind (by default, every listed student who may still be reminded today) and confirms that she has finished selecting.
 5. The system asks the instructor to confirm sending a reminder to the selected students.
 6. The instructor confirms.
-7. The system determines each selected student's outstanding submissions again, at the time of sending.
+7. The system determines each selected student's outstanding submissions again, at the time of sending, for the same week that was displayed at step 3.
 8. The system has the email service send each selected student who still has an outstanding submission an individual reminder according to the "Reminder email" defined in the Associated Information of this use case.
 9. The system records each reminder the email service accepted (BR-reminder-limit).
 10. The system informs the instructor how many reminders were sent, and lists each selected student who was not reminded with the reason.
@@ -1368,6 +1368,9 @@ No two teams can have the same name. The team name must be unique. The course ad
 - **7a. A selected student submitted the outstanding artifact after the list was displayed:**
   - 7a1. The system does not remind her for that artifact; if she has no outstanding artifact left, the system does not remind her at all.
   - 7a2. The flow continues at step 8.
+- **7c. The current week has changed since the list was displayed (the instructor confirmed after Sunday midnight):**
+  - 7c1. The system sends no reminder and informs the instructor that the list is out of date, because the previous week is now a different week and the displayed week's peer evaluations can no longer be submitted (BR-evaluation-submission-window).
+  - 7c2. The flow returns to step 2.
 - **7b. A selected student was reminded by another instructor or course admin after the list was displayed:**
   - 7b1. The system does not remind her again (BR-reminder-limit).
   - 7b2. The flow continues at step 8.
