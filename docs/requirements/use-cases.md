@@ -1343,6 +1343,9 @@ No two teams can have the same name. The team name must be unique. The course ad
 - **1a. The instructor is neither assigned to the course section nor the course admin who owns its course, or the user is a student:**
   - 1a1. The system refuses access to the course section's submission status (BR-section-scoped-access, BR-role-based-access).
   - 1a2. Use case ends.
+- **1b. The course section is not active:**
+  - 1b1. The system informs the instructor that the course section is not active, so its students are not reminded; this matches the scheduled reminder, which runs only for active course sections (FR-NOT-weekly-reminder).
+  - 1b2. Use case ends.
 - **2a. The previous week is not one of the course section's active weeks:**
   - 2a1. The system informs the instructor that no weekly activity report or peer evaluation was required for that week, so no student has an outstanding submission (BR-active-weeks, BR-outstanding-submission).
   - 2a2. Use case ends.
@@ -1427,6 +1430,8 @@ Other:
 - The list is a student educational record; it is shown only to the actors named in the Business Rules field (CO-ferpa).
 - BR-reminder-limit holds even when two instructors send at the same moment: at most one on-demand reminder reaches a student per day.
 - Each reminder is independent: a failure to send one does not undo or block the others, and the state after step 9 is known exactly, because a reminder is recorded only when the email service accepted it.
+- The students of a course section are the students enrolled in it, judged by each student's own course section rather than her team's (AS-one-section-per-student).
+- A reminder record belongs to its student: deleting the student (BR-student-lifecycle) removes her reminder records with her, and must not be blocked by them.
 - The scheduled weekly reminder (FR-NOT-weekly-reminder) is a separate behavior and is not changed by this use case.
 
 **Related Use Cases:** UC-STU-view-pending-invitations, UC-WAR-team-war-report, UC-EVA-section-evaluation-report, UC-WAR-manage-activities, UC-EVA-submit-evaluation
