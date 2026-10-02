@@ -1353,6 +1353,9 @@ No two teams can have the same name. The team name must be unique. The course ad
 - **2c. A student of the course section has been deactivated:**
   - 2c1. The system does not list her (BR-student-lifecycle, BR-outstanding-submission).
   - 2c2. The flow continues at step 3.
+- **2d. A student recorded activities for the previous week and later deleted every one of them:**
+  - 2d1. The system treats her weekly activity report as outstanding, because a weekly activity report is only the activities she has recorded for the week (BR-outstanding-submission).
+  - 2d2. The flow continues at step 3.
 - **3a. No student has an outstanding submission:**
   - 3a1. The system informs the instructor that every student assigned to a team has submitted for the previous week.
   - 3a2. Use case ends.
@@ -1412,6 +1415,13 @@ Reminder email:
 - For an outstanding peer evaluation, states that it can be submitted only until the end of the current week and cannot be made up afterward (BR-evaluation-submission-window). For an outstanding weekly activity report, states that it is still missing; no deadline is stated, because no rule makes a weekly activity report late.
 - Does not quote the course section's configured due days and due times: those drive the scheduled reminder (FR-NOT-weekly-reminder) for the current week and would give a wrong or already-past date for the previous week's work.
 - Delivered through the Gmail SMTP integration (CI-email-notifications).
+
+Decided edge cases:
+- Week: the use case always concerns the previous week. The instructor does not choose a week, so a report missing from an earlier week is not listed here; UC-WAR-team-war-report already shows, team by team, who did not turn in a report for a chosen week.
+- Submitted, then deleted: a weekly activity report becomes outstanding again when the student deletes every activity she recorded for the week (extension 2d). A peer evaluation cannot be deleted, only edited while its window is open (BR-evaluation-editable-until-close), and editing never makes it outstanding.
+- Content of a report: one recorded activity for the week is enough, whatever its status or hours; this use case judges whether a report exists, not its quality.
+- Submission window already closed: a peer evaluation for the previous week is submittable throughout the current week (BR-evaluation-submission-window), so at step 2 its window is always open; the only way to reach a closed window is for the week to change before sending, which extension 7c handles by sending nothing. A weekly activity report has no closing window, so a reminder for it is never too late.
+- Inactive week: a weekly activity report may be recorded for any week (BR-active-weeks), but it is required, and therefore can be outstanding, only for an active week (see Active Week in the glossary).
 
 Other:
 - The list is a student educational record; it is shown only to the actors named in the Business Rules field (CO-ferpa).
