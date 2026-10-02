@@ -1312,14 +1312,14 @@ No two teams can have the same name. The team name must be unique. The course ad
 **UC ID and Name:** UC-STU-remind-non-submitters: Remind the students who have not submitted for the previous week
 **Created By:** Syrah Omar
 **Date Created:** 2026-10-01
-**Primary Actor:** instructor
+**Primary Actor:** instructor (including the course admin who owns the course section's course, who holds every instructor capability per BR-role-based-access)
 **Secondary Actors:** student (the recipient of a reminder), Gmail SMTP email service
 **Trigger:** The instructor indicates to view the students of a course section who have not submitted for the previous week.
 **Description:** The instructor wants to see which students of a course section still owe a weekly activity report or a peer evaluation for the previous week, and to remind only those students, so that she can follow up with them instead of emailing the whole course section.
 
 **Preconditions:**
 - PRE-1. The instructor is logged into the system.
-- PRE-2. The instructor is assigned to the course section (BR-section-scoped-access).
+- PRE-2. The instructor is assigned to the course section, or is the course admin who owns its course (BR-section-scoped-access).
 
 **Postconditions:**
 - POST-1. The instructor is shown the students of the course section who have an outstanding submission for the previous week, and which artifact each one owes (BR-outstanding-submission).
@@ -1340,7 +1340,7 @@ No two teams can have the same name. The team name must be unique. The course ad
 11. Use case ends.
 
 **Extensions:**
-- **1a. The instructor is not assigned to the course section:**
+- **1a. The instructor is neither assigned to the course section nor the course admin who owns its course, or the user is a student:**
   - 1a1. The system refuses access to the course section's submission status (BR-section-scoped-access, BR-role-based-access).
   - 1a2. Use case ends.
 - **2a. The previous week is not one of the course section's active weeks:**
